@@ -76,15 +76,21 @@ def get_model():
         )
     return model
 
-@app.post("/transcribe/")
+@app.post("/transcribe")
 async def transcribe_audio(file: UploadFile = File(...)):
     try:
-        file_path = "temp_audio"   # safe filename
+        file_path = f"temp_{file.filename}"
+
+        print("File received:", file.filename)
 
         with open(file_path, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
 
+        print("File saved:", file_path)
+
         model = get_model()
+
+        print("Transcribing...")
         segments, _ = model.transcribe(file_path)
 
         text = ""
@@ -93,7 +99,10 @@ async def transcribe_audio(file: UploadFile = File(...)):
 
         os.remove(file_path)
 
+        print("Done!")
+
         return {"text": text}
 
     except Exception as e:
+        print("ERROR:", e)
         return {"error": str(e)}
