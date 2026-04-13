@@ -29,8 +29,8 @@ model = WhisperModel(
 @app.post("/transcribe")
 async def transcribe_audio(file: UploadFile = File(...)):
     try:
-        # ✅ unique filename (important)
         file_path = f"temp_{file.filename}"
+        compressed_path = f"compressed_{file.filename}"
 
         print("📥 File received:", file.filename)
 
@@ -38,18 +38,29 @@ async def transcribe_audio(file: UploadFile = File(...)):
         with open(file_path, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
 
-        print("💾 File saved:", file_path)
+        print("💾 File saved")
 
-        # 🚀 FAST TRANSCRIPTION
+        # 🔥 AUDIO COMPRESS (BIG SPEED BOOST)
+        import subprocess
+        subprocess.run([
+            "ffmpeg", "-i", file_path,
+            "-ar", "16000", "-ac", "1",
+            compressed_path
+        ])
+
+        print("⚡ Audio compressed")
+
+        # 🚀 FAST TRANSCRIBE
         segments, _ = model.transcribe(
-            file_path,
-            beam_size=1   # ⚡ speed boost
+            compressed_path,
+            beam_size=1
         )
 
-        text = "".join([segment.text for segment in segments])
+        text = "".join([seg.text for seg in segments])
 
-        # delete temp file
+        # cleanup
         os.remove(file_path)
+        os.remove(compressed_path)
 
         print("✅ Done!")
 

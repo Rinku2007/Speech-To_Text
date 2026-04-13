@@ -9,40 +9,43 @@ async function uploadAudio() {
     return;
   }
 
+  // 🔥 FILE SIZE LIMIT
+  if (file.size > 2 * 1024 * 1024) {
+    alert("File too large! Max 2MB");
+    return;
+  }
+
   const formData = new FormData();
   formData.append("file", file);
 
-  document.getElementById("output").value = "⏳ Processing audio...";
+  const output = document.getElementById("output");
+
+  // 🔥 LOADING ANIMATION
+  let dots = 0;
+  const interval = setInterval(() => {
+    dots = (dots + 1) % 4;
+    output.value = "⏳ Processing" + ".".repeat(dots);
+  }, 500);
 
   try {
-    const response = await fetch("/transcribe/", {
+    const response = await fetch("/transcribe", {
       method: "POST",
       body: formData
     });
 
-    console.log("Status:", response.status);
+    const data = await response.json();
 
-    let data;
-
-    try {
-      data = await response.json();
-    } catch (e) {
-      const text = await response.text();
-      document.getElementById("output").value = "SERVER ERROR: " + text;
-      return;
-    }
-
-    console.log("Data:", data);
+    clearInterval(interval);
 
     if (data.error) {
-      document.getElementById("output").value = "ERROR: " + data.error;
+      output.value = "ERROR: " + data.error;
     } else {
-      document.getElementById("output").value = data.text || "No text found";
+      output.value = data.text || "No text found";
     }
 
   } catch (error) {
-    console.error("FULL ERROR:", error);
-    document.getElementById("output").value = "ERROR: " + error;
+    clearInterval(interval);
+    output.value = "ERROR: " + error;
   }
 }
 
