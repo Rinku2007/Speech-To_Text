@@ -10,7 +10,7 @@ async function uploadAudio() {
   }
 
   // 🔥 FILE SIZE LIMIT
-  if (file.size > 2 * 1024 * 1024) {
+  if (file.size > 3.5 * 1024 * 1024) {
     alert("File too large! Max 2MB");
     return;
   }
