@@ -64,7 +64,18 @@ else:
     os.environ["PATH"] = os.path.abspath("ffmpeg") + ":" + os.environ["PATH"]
 
 # ✅ lightweight + fast model
-model = WhisperModel("tiny", device="cpu")
+model = None
+
+def get_model():
+    global model
+    if model is None:
+        model = WhisperModel(
+            "tiny",
+            device="cpu",
+            compute_type="int8"
+        )
+    return model
+
 @app.post("/transcribe/")
 async def transcribe_audio(file: UploadFile = File(...)):
     try:
@@ -73,6 +84,7 @@ async def transcribe_audio(file: UploadFile = File(...)):
         with open(file_path, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
 
+        model = get_model()
         segments, _ = model.transcribe(file_path)
 
         text = ""
