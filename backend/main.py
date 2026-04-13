@@ -16,7 +16,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 def home():
     return FileResponse("static/index.html")
 
-model = whisper.load_model("base")
+model = whisper.load_model("tiny")
 
 @app.post("/transcribe/")
 async def transcribe_audio(file: UploadFile = File(...)):
