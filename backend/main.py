@@ -23,7 +23,7 @@ if platform.system() != "Windows":
 model = WhisperModel(
     "tiny.en",
     device="cpu",
-    compute_type="int8"
+    compute_type="int8",
 )
 
 @app.post("/transcribe")
