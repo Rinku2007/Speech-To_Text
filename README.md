@@ -1,25 +1,45 @@
-# 🎤 AI Speech-to-Text Web App (Whisper)
+# 🎤 AI Speech-to-Text Web App
 
-A modern full-stack web application that converts audio or live speech into text using **OpenAI Whisper**.
+A simple and efficient **Speech-to-Text web application** that converts audio into text using a lightweight Whisper model. The app supports both file upload and live speech input.
 
 ---
 
 ## 🚀 Features
 
 * 🎧 Upload audio files and convert to text
-* 🎙️ Live microphone speech-to-text
-* 📄 Download transcription as `.txt`
-* ⚡ Fast processing with Whisper model
-* 🌐 Single server (FastAPI serves frontend + backend)
-* 🎨 Modern glassmorphism UI
+* 🎤 Live speech recognition (microphone)
+* ⚡ Optimized for faster processing
+* 📄 Download transcribed text
+* 🌐 Deployed on Render
 
 ---
 
-## 🧠 Tech Stack
+## 🧠 How It Works
+
+1. User uploads an audio file
+2. Audio is compressed and trimmed using FFmpeg
+3. Whisper model processes the audio
+4. Text output is displayed
+
+---
+
+## ⏱️ Performance
+
+* Converts speech to text in approx **1–1.5 minutes**
+* Depends on:
+
+  * Audio length
+  * Server speed
+  * Network
+
+---
+
+## 🛠️ Tech Stack
 
 * **Frontend:** HTML, CSS, JavaScript
-* **Backend:** FastAPI (Python)
-* **AI Model:** OpenAI Whisper
+* **Backend:** FastAPI
+* **Model:** Faster-Whisper (`tiny.en`)
+* **Deployment:** Render
 * **Audio Processing:** FFmpeg
 
 ---
@@ -27,70 +47,55 @@ A modern full-stack web application that converts audio or live speech into text
 ## 📂 Project Structure
 
 ```
-speech-to-text/
-│
-├── backend/
-│   ├── main.py
-│   ├── static/
-│   │   ├── index.html
-│   │   ├── style.css
-│   │   ├── script.js
-│
-└── README.md
+project/
+│── main.py
+│── requirements.txt
+│── ffmpeg/              # (optional for local / deployment support)
+│── static/
+│   ├── index.html
+│   ├── script.js
+│   ├── style.css
 ```
+
+---
+
+## 🎵 FFmpeg Requirement
+
+This project uses **FFmpeg** for audio processing.
+
+* Windows: Install FFmpeg and add it to PATH
+* Render/Linux: Already available (`/usr/bin`)
+
+Used for:
+
+* Audio compression
+* Format conversion
+* Speed optimization
 
 ---
 
 ## ⚙️ Setup Instructions
 
-### 1️⃣ Clone the repository
-
-```bash
-git clone https://github.com/your-username/speech-to-text.git
-cd speech-to-text/backend
-```
-
----
-
-### 2️⃣ Create virtual environment
-
-```bash
-python -m venv venv
-venv\Scripts\activate   # Windows
-```
-
----
-
-### 3️⃣ Install dependencies
-
-```bash
-pip install fastapi uvicorn openai-whisper python-multipart torch
-```
-
----
-
-### 4️⃣ Install FFmpeg
-
-* Download from: https://www.gyan.dev/ffmpeg/builds/
-* Extract and add `bin` folder to PATH
-
-Example:
+### 1. Clone Repo
 
 ```
-C:\ffmpeg\bin
+git clone <your-repo-link>
+cd project
 ```
 
----
+### 2. Install Dependencies
 
-### 5️⃣ Run the server
+```
+pip install -r requirements.txt
+```
 
-```bash
+### 3. Run Server
+
+```
 uvicorn main:app --reload
 ```
 
----
-
-## 🌐 Open in Browser
+### 4. Open Browser
 
 ```
 http://127.0.0.1:8000
@@ -98,56 +103,49 @@ http://127.0.0.1:8000
 
 ---
 
-## 🎯 Usage
+## 🌐 Deployment (Render)
 
-### 🎧 Upload Audio
+* Build Command:
 
-* Click "Choose File"
-* Select audio file
-* Click **Convert**
+```
+pip install -r requirements.txt
+```
 
----
+* Start Command:
 
-### 🎙️ Live Speech
-
-* Click **🎙️ Speak**
-* Start speaking
-* Click **🛑 Stop** to end
+```
+uvicorn main:app --host 0.0.0.0 --port 10000
+```
 
 ---
 
-### 📄 Download Text
+## ⚡ Optimizations Used
 
-* Click **Download Text**
-* File will save as `transcription.txt`
-
----
-
-## ⚠️ Notes
-
-* Works best on **Google Chrome**
-* Microphone feature requires internet
-* FFmpeg must be installed properly
+* Lightweight model (`tiny.en`)
+* Audio compression + trimming
+* Silence removal (VAD filter)
+* CPU threading
+* Limited audio duration (15 sec)
 
 ---
 
-## 🚀 Future Improvements
+## ⚠️ Limitations
 
-* 🌍 Multi-language support
-* 🎬 Subtitle (.srt) generation
-* 🎧 Audio preview player
-* ☁️ Deployment (Render / Railway)
-* 🎨 Advanced UI animations
+* Best for short audio
+* Slower on free servers
+* English optimized
+
+---
+
+## 📌 Future Improvements
+
+* Real-time transcription
+* Multi-language support
+* Faster GPU processing
+* UI improvements
 
 ---
 
 ## 👨‍💻 Author
 
-**Rinku**
-💻 Developer | AI Enthusiast
-
----
-
-## ⭐ Support
-
-If you like this project, give it a ⭐ on GitHub!
+Speech-to-Text project using AI + FastAPI 🚀
